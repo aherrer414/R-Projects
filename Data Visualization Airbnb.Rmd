@@ -1,0 +1,91 @@
+---
+title: "Homework 7"
+author: "Artemio Herrera"
+netid: 'aherre48'
+date: "4/21/2020"
+output: html_document
+---
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Data from Kaggle
+https://www.kaggle.com/dgomonov/new-york-city-airbnb-open-data 
+
+### Description of Data
+Airbnb, Inc is an online marketplace for arranging or offering lodging mostly for homestays or tourism thus acting as a broker in receiving commissions between a host and guest.
+
+Airbnb is part of the sharing economy in which individuals are able to make money off their property and many variables affect a successful host in their longevity in using the app as well as the financial gains they have. 
+
+The dataset describes the listing of activity and metric of Airbnb activity in New York City, New York for the year 2019.
+
+The data sets contains information about the hosts, geographic availability, price of lodging, 
+information about the reviews, and necessary metrics to make predictions and conclusions.
+
+The data will be able to help learn about hosts in different areas of New York such as which hosts are busiest or which characteristics have the potential to make  the most money, this can help explore Airbnb trends in New York City.
+
+
+```{r }
+library(tidyverse)
+
+airbnb <- read_csv("C:/Users/Artemio/Desktop/AirBnb_New_York_Data/AB_NYC_2019.csv")
+```
+
+###### Questions and Visualization 
+
+# Question 1
+What is the relationship between neighborhoods and price and
+how do airbnb's in certain neighborhoods found in the New York City's boroughs vary by price? 
+```{r fig.align='center'}
+library(ggplot2)
+ggplot(data = airbnb) +
+  geom_point(mapping = aes(x = neighbourhood, y = price, color = neighbourhood_group ))
+```
+#Explanation 
+A scatterplot seemed appropriate since it gives different variation from the different neighborhoods with price. By coloring the different boroughs of New York City it helps distinguish which nieghbourhood belongs to a certain area. We see that neighborhoods in Manhattan and Brooklyn are the most expensive since they have the highest clusters. Compared to areas that are cheaper in price such as Bronx, Queens, and Staten Island. This can help people determine tourists determine which borough is best then look further into the type of neighbourhood. 
+
+
+###Question 2
+How do the number of reviews for an Airbnb change with the price? Are reviews solely based on a  specific Airbnb or do more expensive areas have better service?
+```{r fig.align='center'}
+library(ggplot2)
+ggplot(data = airbnb) +
+  geom_point(mapping = aes(x = number_of_reviews, y = price, color = neighbourhood_group ))
+```
+#Explanation 
+A scatterplot is useful because it takes take the number of reviews for every Airbnb and shows how it varies with price. We see that the lower the price the more reviews there are for Airbnb. This shows that people tend to go for the cheaper price so the behavior of people is that people pick cheaper locations to stay at. We see that neighbourhoods in general that are cheaper like Queens and Staten Island are cheaper compared to high end areas like Manhattan thus offer lower prices. The only thing we can not determine is positive or negative reviews. 
+
+###Question 3
+How does price vary for Airbnbs in New York City?
+```{r fig.align='center'}
+library(ggplot2)
+ggplot(data = airbnb, aes(x = price)) + geom_histogram(color = 'dark blue',binwidth=5)
+```
+#Explanation 
+A histogram is appropriate because it provides a visual interpretation of the data of prices of Airbnb in New York City and gives the range of values. It shows the frequency of price within a value. We see much of the outliers begin after around afer the price of $625. It gives a general trend of price range of New York City.
+
+###Question 4
+How does the average price vary between the type of rooms avaialbe in Manhattan?
+```{r fig.align='center'}
+airbnb %>%
+  filter(neighbourhood_group == 'Manhattan')%>%
+  group_by(room_type) %>%
+  summarise(average_price_room = mean(price, na.rm = TRUE))%>%
+ggplot(aes(x = room_type, y = average_price_room)) +
+  geom_bar(stat="identity", fill = 'dark green', color = 'black')
+```
+#Explanation 
+A bar graph seemed most appropriate becuase we wanted to find the different price averages of the type of rooms specfically in Manhattan. A bar graph works because it help differentiate between an entire home or apartment, private room, or shared room. This can help people determine the difference bewteen the groups and how much they would save between the different groups of type of room. Manhattan is where there is a lot of tourism and well as business so it would be helpful to know the average price there. The type of rooms is helpful since it also limits the amount for groups and gives an idea of what is best in price for big or small groups or people travling alonge.
+
+###Question 5
+In general how do boroughs(nieghborhood groups) differ on average based on the number of reviews the airbnb get after being used?
+```{r fig.align='center'}
+airbnb %>%
+  group_by(neighbourhood_group) %>%
+  summarise(average_reviews = mean(number_of_reviews, na.rm = TRUE))%>%
+ggplot(aes(x = neighbourhood_group, y = average_reviews)) +
+  geom_bar(stat="identity", fill = 'dark red', color = 'black')
+
+```
+#Explanation  
+A bar graph helps differeniate the relationship between neighbourhood groups and the amount of reviews they get. This shows that there is not much difference and gives a more exact number for the differences. We see that Queens and Staten Island has the most reviews by giving an exact number to the relationship and Manhattan has the least on average. Queens, Bronx, and Brooklyn are in the middle.
